@@ -23,7 +23,7 @@ brew upgrade sylphx
 | Channel | Command |
 | --- | --- |
 | **Homebrew (this tap)** | `brew install sylphxai/tap/sylphx` |
-| **GitHub Releases script** | `curl -fsSL https://raw.githubusercontent.com/SylphxAI/platform/main/scripts/install-sylphx.sh \| bash` |
+| **GitHub Releases script** | `curl -fsSL https://raw.githubusercontent.com/SylphxAI/cloud/main/scripts/install-sylphx.sh \| bash` |
 | **crates.io** | `cargo install sylphx-cli` |
 | **npm adapter** | `npm i -g @sylphx/cli` |
 
@@ -33,7 +33,7 @@ Package-managed installs should use the package manager (`brew upgrade sylphx`).
 ## Formula source
 
 The formula is maintained here under `Formula/sylphx.rb`.
-A copy also lives in `SylphxAI/platform` at `packaging/homebrew/sylphx.rb` for monorepo review; **this tap is the install authority for Homebrew users**.
+A copy also lives in `SylphxAI/cloud` at `packaging/homebrew/sylphx.rb` for monorepo review; **this tap is the install authority for Homebrew users**.
 
 ## Claiming the name
 
