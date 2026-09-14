@@ -9,28 +9,28 @@
 class Sylphx < Formula
   desc "Sylphx Platform operator CLI (Rust native)"
   homepage "https://sylphx.com"
-  version "0.2.4"
+  version "0.3.0"
   license "MIT"
 
   on_macos do
     on_arm do
-      url "https://github.com/SylphxAI/platform/releases/download/cli-v0.2.4/sylphx-darwin-arm64"
-      sha256 "e5c11a8beb382782056ceefdc067cd842a8e5305890a7b7d051b64a1dbcfe2f9"
+      url "https://github.com/SylphxAI/cloud/releases/download/cli-v0.3.0/sylphx-darwin-arm64"
+      sha256 "c57ca83018b5efc0d996b332488c9a2696418b6835adf1ac19ef70554eb75a51"
     end
     on_intel do
-      url "https://github.com/SylphxAI/platform/releases/download/cli-v0.2.4/sylphx-darwin-x64"
-      sha256 "9ab0f2a8dabae7692381bea4850ffffba949d31c94009c544882589a5917ab1c"
+      url "https://github.com/SylphxAI/cloud/releases/download/cli-v0.3.0/sylphx-darwin-x64"
+      sha256 "b858d5c55c7c9efd01e6ae80924a975021db0ffb26ff271d48c9d11e5401574f"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/SylphxAI/platform/releases/download/cli-v0.2.4/sylphx-linux-x64"
-      sha256 "ff5e830d2a6b7a9e24e6d1aa9da23346d3bde8284a4e5882d34050c88b5e7da7"
+      url "https://github.com/SylphxAI/cloud/releases/download/cli-v0.3.0/sylphx-linux-x64"
+      sha256 "8130fcc73d10fc0872b650826c96dca0ba1198205b6c991d11bca3f25aa7455c"
     end
     on_arm do
-      url "https://github.com/SylphxAI/platform/releases/download/cli-v0.2.4/sylphx-linux-arm64"
-      sha256 "1ef581d2113c02900be1f6542067afd066e1a18870845885289f560c15407a68"
+      url "https://github.com/SylphxAI/cloud/releases/download/cli-v0.3.0/sylphx-linux-arm64"
+      sha256 "ab079d1a4bc3b3f73de534bfd111a1559fd2bd83b1a9f0abe29f3240e4ffb406"
     end
   end
 
