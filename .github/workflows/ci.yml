@@ -1,0 +1,37 @@
+# Every formula change passes `brew style`, `brew audit --strict --online`, and
+# an install plus `brew test` on Linux and macOS before the merge queue lands
+# it. `ci-ok` is the required check.
+name: CI
+
+on:
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  formula:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_FROM_API: 1
+    steps:
+      # Checks this repository out as the sylphxai/tap tap.
+      - uses: Homebrew/actions/setup-homebrew@main
+      - run: brew style sylphxai/tap/sylphx
+      - run: brew audit --strict --online --formula sylphxai/tap/sylphx
+      - run: brew install --formula sylphxai/tap/sylphx
+      - run: brew test sylphxai/tap/sylphx
+
+  ci-ok:
+    if: always()
+    needs: [formula]
+    runs-on: ubuntu-24.04
+    steps:
+      - run: '[ "${{ needs.formula.result }}" = success ]'
