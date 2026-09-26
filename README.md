@@ -1,6 +1,6 @@
 # Sylphx Homebrew Tap
 
-Official Homebrew tap for the **Sylphx Platform operator CLI** (`sylphx`).
+The official Homebrew tap for `sylphx`, the [Sylphx](https://sylphx.com) command-line tool.
 
 The formula packages the `sylphx` binaries published on
 [SylphxAI/sylphx-clients releases](https://github.com/SylphxAI/sylphx-clients/releases).
@@ -27,8 +27,8 @@ brew upgrade sylphx
 | **crates.io** | `cargo install sylphx-cli` |
 | **npm adapter** | `npm i -g @sylphx/cli` |
 
-Self-update for release-binary installs: `sylphx update`  
-Package-managed installs should use the package manager (`brew upgrade sylphx`).
+A binary installed with the install script updates itself with `sylphx update`;
+a Homebrew, cargo or npm install updates through that package manager.
 
 ## Formula source
 
@@ -38,11 +38,3 @@ workflow opens a pull request here with the new version and checksums, and
 auto-merge lands it through the merge queue once `ci-ok` passes (`brew style`,
 `brew audit --strict --online`, install and `brew test` on Linux and macOS).
 Change the formula by changing that script, not by editing this file.
-
-## Claiming the name
-
-- Homebrew command: `sylphx`
-- Tap path: `sylphxai/tap/sylphx` (Homebrew lowercases org `SylphxAI` → `sylphxai`)
-- This repository exists so the official install path cannot be quietly taken by a third-party tap with the same org/name collision on GitHub.
-
-`homebrew-core` inclusion is a separate, later process (core PR + review) and is **not** required to own the official Sylphx brew install path.
