@@ -1,6 +1,8 @@
 # Every formula change passes `brew style`, `brew audit --strict --online`, and
 # an install plus `brew test` on Linux and macOS before the merge queue lands
-# it. `ci-ok` is the required check.
+# it. `ci-ok` is the required check. Everything runs on Sylphx runners. Pull
+# requests from forks do not run here, so outside code never runs on them; the
+# formula bump PRs come from this repository.
 name: CI
 
 on:
@@ -10,28 +12,52 @@ on:
 permissions:
   contents: read
 
+env:
+  CHECKS: |
+    brew style sylphxai/tap/sylphx
+    brew audit --strict --online --formula sylphxai/tap/sylphx
+    brew install --formula sylphxai/tap/sylphx
+    brew test sylphxai/tap/sylphx
+
 jobs:
-  formula:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-24.04, macos-15]
-    runs-on: ${{ matrix.os }}
+  # Linux: Homebrew's own image (digest-pinned), run with Docker on our runner.
+  linux:
+    if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: sylphx-linux-standard
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        timeout-minutes: 10
+      - name: brew style, audit, install, test
+        run: |
+          docker run --rm -v "$PWD:/src:ro" -e CHECKS \
+            -e HOMEBREW_NO_AUTO_UPDATE=1 -e HOMEBREW_NO_ANALYTICS=1 \
+            ghcr.io/homebrew/ubuntu22.04@sha256:d0ca41bfd05a7d08f4a3f8ee89e93794b16931a982ab25c4193beb27c6f588bd \
+            bash -euo pipefail -c '
+              tap="$(brew --repository)/Library/Taps/sylphxai/homebrew-tap"
+              mkdir -p "$tap" && cp -R /src/. "$tap/"
+              eval "$CHECKS"'
+
+  # macOS: our macOS runners.
+  macos:
+    if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: [self-hosted, sylphx, macos, standard]
     timeout-minutes: 20
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
-      HOMEBREW_NO_INSTALL_FROM_API: 1
     steps:
       # Checks this repository out as the sylphxai/tap tap.
       - uses: Homebrew/actions/setup-homebrew@main
-      - run: brew style sylphxai/tap/sylphx
-      - run: brew audit --strict --online --formula sylphxai/tap/sylphx
-      - run: brew install --formula sylphxai/tap/sylphx
-      - run: brew test sylphxai/tap/sylphx
+      - name: brew style, audit, install, test
+        run: |
+          set -euo pipefail
+          eval "$CHECKS"
+          brew uninstall --formula sylphxai/tap/sylphx
 
   ci-ok:
     if: always()
-    needs: [formula]
-    runs-on: ubuntu-24.04
+    needs: [linux, macos]
+    runs-on: sylphx-linux-standard
+    timeout-minutes: 5
     steps:
-      - run: '[ "${{ needs.formula.result }}" = success ]'
+      - run: '[ "${{ needs.linux.result }}" = success ] && [ "${{ needs.macos.result }}" = success ]'
