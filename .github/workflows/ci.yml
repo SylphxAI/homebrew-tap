@@ -31,28 +31,35 @@ jobs:
       - name: brew style, audit, install, test
         run: |
           docker run --rm -v "$PWD:/src:ro" -e CHECKS \
-            -e HOMEBREW_NO_AUTO_UPDATE=1 -e HOMEBREW_NO_ANALYTICS=1 \
+            -e HOMEBREW_NO_AUTO_UPDATE=1 -e HOMEBREW_NO_INSTALL_CLEANUP=1 -e HOMEBREW_NO_ANALYTICS=1 \
             ghcr.io/homebrew/ubuntu22.04@sha256:d0ca41bfd05a7d08f4a3f8ee89e93794b16931a982ab25c4193beb27c6f588bd \
             bash -euo pipefail -c '
               tap="$(brew --repository)/Library/Taps/sylphxai/homebrew-tap"
               mkdir -p "$tap" && cp -R /src/. "$tap/"
               eval "$CHECKS"'
 
-  # macOS: our macOS runners.
+  # macOS: our macOS runners (a persistent machine with Homebrew installed).
+  # The checkout is tapped directly, without updating Homebrew, and removed
+  # again afterwards.
   macos:
     if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: [self-hosted, sylphx, macos, standard]
     timeout-minutes: 20
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+      HOMEBREW_NO_ANALYTICS: 1
+      HOMEBREW_NO_ENV_HINTS: 1
     steps:
-      # Checks this repository out as the sylphxai/tap tap.
-      - uses: Homebrew/actions/setup-homebrew@main
+      - uses: actions/checkout@v6
+        timeout-minutes: 10
       - name: brew style, audit, install, test
         run: |
           set -euo pipefail
+          tap="$(brew --repository)/Library/Taps/sylphxai/homebrew-tap"
+          rm -rf "$tap" && mkdir -p "$tap" && cp -R . "$tap/"
+          trap 'brew uninstall --formula sylphxai/tap/sylphx >/dev/null 2>&1 || true; rm -rf "$tap"' EXIT
           eval "$CHECKS"
-          brew uninstall --formula sylphxai/tap/sylphx
 
   ci-ok:
     if: always()
