@@ -1,5 +1,9 @@
 # Sylphx Homebrew Tap
 
+<p align="center">
+  <img src="https://mark.sylphx.com/api/v1/mark/hero.svg?type=terminal&text=brew%20install%20sylphxai/tap/sylphx&animation=type" alt="Sylphx Homebrew Tap" width="100%" />
+</p>
+
 The official Homebrew tap for `sylphx`, the [Sylphx](https://sylphx.com) command-line tool.
 
 The formula packages the `sylphx` binaries published on
