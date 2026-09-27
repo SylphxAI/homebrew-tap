@@ -23,7 +23,7 @@ jobs:
   # Linux: Homebrew's own image (digest-pinned), run with Docker on our runner.
   linux:
     if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
@@ -64,7 +64,7 @@ jobs:
   ci-ok:
     if: always()
     needs: [linux, macos]
-    runs-on: sylphx-linux-standard
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - run: '[ "${{ needs.linux.result }}" = success ] && [ "${{ needs.macos.result }}" = success ]'
