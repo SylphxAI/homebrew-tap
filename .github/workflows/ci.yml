@@ -1,8 +1,9 @@
 # Every formula change passes `brew style`, `brew audit --strict --online`, and
 # an install plus `brew test` on Linux and macOS before the merge queue lands
-# it. `ci-ok` is the required check. Everything runs on Sylphx runners. Pull
-# requests from forks do not run here, so outside code never runs on them; the
-# formula bump PRs come from this repository.
+# it. `ci-ok` is the required check. This repository is public, so every job
+# runs on GitHub's free hosted runners (owner#750: zero metered spend, and no
+# repository code on Sylphx's own machines). Pull requests from forks do not
+# run here; the formula bump PRs come from this repository.
 name: CI
 
 on:
@@ -20,7 +21,7 @@ env:
     brew test sylphxai/tap/sylphx
 
 jobs:
-  # Linux: Homebrew's own image (digest-pinned), run with Docker on our runner.
+  # Linux: Homebrew's own image (digest-pinned), run with Docker on the runner.
   linux:
     if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
@@ -38,12 +39,16 @@ jobs:
               mkdir -p "$tap" && cp -R /src/. "$tap/"
               eval "$CHECKS"'
 
-  # macOS: our macOS runners (a persistent machine with Homebrew installed).
-  # The checkout is tapped directly, without updating Homebrew, and removed
-  # again afterwards.
+  # macOS: hosted runners, free for public repositories, on both architectures
+  # the formula pins a separate binary and sha256 for. The checkout is tapped
+  # directly, without updating Homebrew, and removed again afterwards.
   macos:
     if: github.event_name == 'merge_group' || github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: [self-hosted, sylphx, macos, standard]
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-26-intel]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1
