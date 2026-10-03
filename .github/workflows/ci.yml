@@ -20,6 +20,10 @@ env:
     brew install --formula sylphxai/tap/sylphx
     brew test sylphxai/tap/sylphx
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   # Linux: Homebrew's own image (digest-pinned), run with Docker on the runner.
   linux:
