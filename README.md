@@ -4,7 +4,7 @@
   <img src="https://mark.sylphx.com/api/v1/mark/hero.svg?type=terminal&text=brew%20install%20sylphxai/tap/sylphx&animation=type" alt="Sylphx Homebrew Tap" width="100%" />
 </p>
 
-The official Homebrew tap for `sylphx`, the [Sylphx](https://sylphx.com) command-line tool, and the anymd, repomap and lockdocs tools.
+The official Homebrew tap for `sylphx`, the [Sylphx](https://sylphx.com) command-line tool, and the AnyAgents, anymd, repomap and lockdocs tools.
 
 The formula packages the `sylphx` binaries published on
 [SylphxAI/sylphx-clients releases](https://github.com/SylphxAI/sylphx-clients/releases).
@@ -16,6 +16,7 @@ brew install sylphxai/tap/sylphx
 brew install sylphxai/tap/anymd
 brew install sylphxai/tap/repomap
 brew install sylphxai/tap/lockdocs
+brew install sylphxai/tap/anyagents
 ```
 
 Upgrade:
@@ -46,4 +47,4 @@ auto-merge lands it through the merge queue once `ci-ok` passes (`brew style`,
 `brew audit --strict --online`, install and `brew test` on Linux and macOS).
 Change the formula by changing that script, not by editing this file.
 
-The anymd, repomap and lockdocs formulas use their existing GitHub release archives and SHA-256 digests, rendered with `SylphxAI/mcp-kit/scripts/package-managers.mjs`. AnyAgents has no prebuilt release or formula yet.
+The AnyAgents, anymd, repomap and lockdocs formulas use their existing GitHub release archives and SHA-256 digests, rendered with `SylphxAI/mcp-kit/scripts/package-managers.mjs`. AnyAgents on Linux requires glibc 2.34 or newer and kernel 5.9 or newer.
