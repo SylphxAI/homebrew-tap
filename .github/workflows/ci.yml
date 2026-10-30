@@ -15,6 +15,10 @@ permissions:
 
 env:
   CHECKS: |
+    # Newer Homebrew versions require explicit trust before loading a tap.
+    if brew command trust >/dev/null 2>&1; then
+      brew trust --tap sylphxai/tap
+    fi
     for file in "$tap"/Formula/*.rb; do
       formula="sylphxai/tap/$(basename "$file" .rb)"
       brew style "$formula"
