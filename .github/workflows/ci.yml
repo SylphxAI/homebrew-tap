@@ -15,10 +15,13 @@ permissions:
 
 env:
   CHECKS: |
-    brew style sylphxai/tap/sylphx
-    brew audit --strict --online --formula sylphxai/tap/sylphx
-    brew install --formula sylphxai/tap/sylphx
-    brew test sylphxai/tap/sylphx
+    for file in "$tap"/Formula/*.rb; do
+      formula="sylphxai/tap/$(basename "$file" .rb)"
+      brew style "$formula"
+      brew audit --strict --online --formula "$formula"
+      brew install --formula "$formula"
+      brew test "$formula"
+    done
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -67,7 +70,7 @@ jobs:
           set -euo pipefail
           tap="$(brew --repository)/Library/Taps/sylphxai/homebrew-tap"
           rm -rf "$tap" && mkdir -p "$tap" && cp -R . "$tap/"
-          trap 'brew uninstall --formula sylphxai/tap/sylphx >/dev/null 2>&1 || true; rm -rf "$tap"' EXIT
+          trap 'for file in "$tap"/Formula/*.rb; do brew uninstall --formula "sylphxai/tap/$(basename "$file" .rb)" >/dev/null 2>&1 || true; done; rm -rf "$tap"' EXIT
           eval "$CHECKS"
 
   ci-ok:
