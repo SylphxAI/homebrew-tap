@@ -19,6 +19,8 @@ brew install sylphxai/tap/lockdocs
 brew install sylphxai/tap/anyagents
 ```
 
+If Homebrew reports this tap as untrusted, run `brew trust --tap sylphxai/tap` and repeat the install command.
+
 Upgrade:
 
 ```bash
